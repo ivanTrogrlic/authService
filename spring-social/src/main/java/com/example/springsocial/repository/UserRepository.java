@@ -1,16 +1,10 @@
 package com.example.springsocial.repository;
 
 import com.example.springsocial.model.User;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.couchbase.repository.CouchbasePagingAndSortingRepository;
 
-import java.util.Optional;
+public interface UserRepository extends CouchbasePagingAndSortingRepository<User, String> {
 
-@Repository
-public interface UserRepository extends JpaRepository<User, Long> {
-
-    Optional<User> findByEmail(String email);
-
-    Boolean existsByEmail(String email);
+    User findByEmail(String email);
 
 }
