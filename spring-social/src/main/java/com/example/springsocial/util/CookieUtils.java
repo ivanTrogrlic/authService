@@ -24,11 +24,11 @@ public class CookieUtils {
         return Optional.empty();
     }
 
-    public static void addCookie(HttpServletResponse response, String name, String value, int maxAge) {
+    public static void addCookie(HttpServletResponse response, String name, String value, boolean isSecure) {
         Cookie cookie = new Cookie(name, value);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
-        cookie.setMaxAge(maxAge);
+        cookie.setSecure(isSecure);
         response.addCookie(cookie);
     }
 
@@ -55,6 +55,5 @@ public class CookieUtils {
         return cls.cast(SerializationUtils.deserialize(
                 Base64.getUrlDecoder().decode(cookie.getValue())));
     }
-
 
 }
