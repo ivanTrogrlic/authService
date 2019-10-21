@@ -1,22 +1,5 @@
 spring:
 
-  jpa:
-    #    show-sql: true
-    hibernate:
-      use-new-id-generator-mappings: false
-      ddl-auto: none
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL5Dialect
-
-  datasource:
-    url: jdbc:mysql://localhost?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
-    username: root
-    password: password
-    driver-class-name: com.mysql.jdbc.Driver
-
   couchbase:
     bootstrap-hosts: localhost
     username: admin
@@ -35,8 +18,6 @@ spring:
       auto-index: true
 
   cache:
-    cache-names: crewchat-profile-cache
-    ttl: 86400000
     data:
       couchbase:
         auto-index: true
@@ -61,13 +42,6 @@ spring:
             scope:
               - email
               - public_profile
-          github:
-            clientId: d3e47fc2ddd966fa4352
-            clientSecret: 3bc0f6b8332f93076354c2a5bada2f5a05aea60d
-            redirectUriTemplate: "{baseUrl}/oauth2/callback/{registrationId}"
-            scope:
-              - user:email
-              - read:user
         provider:
           facebook:
             authorizationUri: https://www.facebook.com/v3.0/dialog/oauth
