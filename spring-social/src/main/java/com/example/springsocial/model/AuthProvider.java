@@ -1,8 +1,6 @@
 package com.example.springsocial.model;
 
-public enum  AuthProvider {
-    local,
+public enum AuthProvider {
     facebook,
-    google,
-    github
+    google
 }
