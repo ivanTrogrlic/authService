@@ -8,7 +8,7 @@ import Profile from '../user/profile/Profile';
 import OAuth2RedirectHandler from '../user/oauth2/OAuth2RedirectHandler';
 import NotFound from '../common/NotFound';
 import LoadingIndicator from '../common/LoadingIndicator';
-import {getCurrentUser} from '../util/APIUtils';
+import {getCurrentUser, logout} from '../util/APIUtils';
 import PrivateRoute from '../common/PrivateRoute';
 import Alert from 'react-s-alert';
 import 'react-s-alert/dist/s-alert-default.css';
@@ -55,12 +55,19 @@ class App extends Component {
     }
 
     handleLogout() {
-
-        this.setState({
-            authenticated: false,
-            currentUser: null
+        logout()
+            .then(() => {
+                this.setState({
+                    authenticated: false,
+                    currentUser: null
+                });
+                Alert.success("You're safely logged out!");
+            }).catch(error => {
+            this.setState({
+                loading: false
+            });
+            Alert.error((error.message) || 'Oops! Something went wrong. Please try again!');
         });
-        Alert.success("You're safely logged out!");
     }
 
     componentDidMount() {

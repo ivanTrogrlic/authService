@@ -21,6 +21,19 @@ const request = (options) => {
         );
 };
 
+const requestLogout = (options) => {
+    const headers = new Headers({
+        'Content-Type': 'application/json',
+    });
+
+    const defaults = {headers: headers};
+    options = {
+        ...defaults, ...options, credentials: "include"
+    };
+
+    return fetch(options.url, options)
+};
+
 export function getCurrentUser() {
     return request({
         url: API_BASE_URL + "/user/me",
@@ -41,5 +54,12 @@ export function signup(signupRequest) {
         url: API_BASE_URL + "/auth/signup",
         method: 'POST',
         body: JSON.stringify(signupRequest)
+    });
+}
+
+export function logout() {
+    return requestLogout({
+        url: API_BASE_URL + "/logout",
+        method: 'POST'
     });
 }
