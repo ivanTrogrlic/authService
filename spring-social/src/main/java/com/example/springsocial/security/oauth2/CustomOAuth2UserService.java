@@ -6,8 +6,8 @@ import com.example.springsocial.repository.UserRepository;
 import com.example.springsocial.security.UserPrincipal;
 import com.example.springsocial.security.oauth2.user.OAuth2UserInfo;
 import com.example.springsocial.security.oauth2.user.OAuth2UserInfoFactory;
+import com.example.springsocial.service.ImagesService;
 import com.example.springsocial.util.Hashing;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -17,14 +17,21 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final ImagesService imagesService;
+
+    public CustomOAuth2UserService(UserRepository userRepository,
+                                   ImagesService imagesService) {
+        this.userRepository = userRepository;
+        this.imagesService = imagesService;
+    }
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
@@ -59,6 +66,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         return UserPrincipal.create(user, oAuth2User.getAttributes());
     }
 
+    // Fetches and saves user image async
     private User registerNewUser(OAuth2UserInfo oAuth2UserInfo) throws NoSuchAlgorithmException {
         String hashedName = Hashing.sha256(oAuth2UserInfo.getName());
         User user = User.builder()
@@ -67,6 +75,14 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .email(oAuth2UserInfo.getEmail())
                 .base64image(oAuth2UserInfo.getImageUrl())
                 .build();
+
+        imagesService.fetchImageByUrl(user.getBase64image())
+                .thenApply(imagesService::downsize)
+                .thenApply(imagesService::base64Encode)
+                .thenAccept(base64Img -> {
+                   user.setBase64image(base64Img);
+                   userRepository.save(user);
+                });
 
         return userRepository.save(user);
     }

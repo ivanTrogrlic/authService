@@ -1,9 +1,9 @@
 spring:
 
   couchbase:
-    bootstrap-hosts: localhost
-    username: admin
-    password: 123456
+    bootstrap-hosts: ${COUCHBASE_HOST:localhost}
+    username: ${COUCHBASE_USERNAME:admin}
+    password: ${COUCHBASE_PASSWORD:123456}
     bucket:
       name: crewappbucket
       username: admin
@@ -60,3 +60,7 @@ app:
       - http://localhost:3000/oauth2/redirect
       - myandroidapp://oauth2/redirect
       - myiosapp://oauth2/redirect
+
+image:
+  scaling:
+    coefficient: 0.8
