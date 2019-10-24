@@ -22,7 +22,6 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 public class ImagesServiceImpl implements ImagesService {
 
-    @Value("image.scaling.coefficient")
     private Float scale;
 
     @Override
@@ -38,6 +37,11 @@ public class ImagesServiceImpl implements ImagesService {
                 throw new ImageDownloadFailedException("Failed to download image", e);
             }
         });
+    }
+
+    @Value("${image.scaling.coefficient}")
+    private void setScale(String scale) {
+        this.scale = Float.parseFloat(scale);
     }
 
     @Override

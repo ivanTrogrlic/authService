@@ -63,4 +63,4 @@ app:
 
 image:
   scaling:
-    coefficient: 0.8
+    coefficient: 0.8f
