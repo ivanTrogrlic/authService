@@ -14,3 +14,5 @@
 cd react-social
 npm install && npm start
 ```
+
+Made with https://github.com/BonoVidakovic
